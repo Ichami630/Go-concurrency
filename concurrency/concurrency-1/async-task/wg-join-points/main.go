@@ -2,20 +2,27 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
 )
 
 func main() {
-	go work()
-	time.Sleep(100 * time.Millisecond)
-	fmt.Println("the main go routine")
+	var wg sync.WaitGroup
+	now := time.Now()
 
-	//no joint point, so the the child process (work function) will
-	//not be executed
+	wg.Add(1) //we are launching 1 go routine
+	go func() {
+		defer wg.Done()
+		work()
+	}()
+
+	wg.Wait() //wait for all goroutines to finish
+	fmt.Println("time waited...", time.Since(now))
+	fmt.Println("the main go routine")
 
 }
 
 func work() {
-	time.Sleep(500 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond) //pause for 500ms
 	fmt.Println("work function")
 }
