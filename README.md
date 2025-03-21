@@ -67,3 +67,28 @@ TLDR; FORK points are automatically created when using the go keyword, JOIN poin
 
 Note: Not to be confused, the term process here does not refer to an OS process, which is way more expensive.
 
+### Common Concurrency Issues
+Here are couple of common issues, which Concurrent Code usually faces:
+
+𐄂 RACE CONDITIONS
+
+When multiple concurrent operations try to read/write shared data at the same time, thus causing non-deterministic results.
+
+𐄂 DEADLOCKS
+
+When concurrent operations are protected by some kind of lock / mutual exclusion, making each process involved in waiting forever on one another, causing a dead lock.
+
+𐄂 LIVELOCKS
+
+When multiple concurrent processes, pretend they modify shared data, which is protected by some kind of lock, when in reality they just end up acquiring a lock without changing the state.
+
+𐄂 STARVATION
+
+When 1 of multiple concurrent processes involved abuses the CPU, thus causing other processes waiting for their turn to starve, hence the name.
+
+𐄂 CODE COMPLEXITY
+
+Writing concurrent code does not always look as normal synchronous code. Sometimes complexity grows naturally just because of the concurrent complex nature, thus requiring shifting the code design.
+
+
+
