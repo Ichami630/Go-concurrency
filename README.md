@@ -50,3 +50,20 @@ All Go binaries when generated they also contain the Garbage Collector responsib
 
 And you guessed it, both the Go Scheduler and Garbage Collector* will actively communicate with the OS Kernel, because they'll frequently make use of your machine's resources.
 
+### Fork Join Model
+While the main function seems only like the entry point for every Go binary. What else happens, is the fact that every main function runs as a Go Routine aka the Main Go Routine, which automatically makes your simplest binary run concurrently.
+
+In Go, you're not limited to how many go routines you can run or how many nested go routines you can have. Thus, every go routine which derives from the main go routine is considered a child go routine.
+
+With child go routines, comes management of these child processes. Normally the process that creates a child process is responsible for destroying/waiting on that process.
+
+If you ever ran a go routine inside main without any kind of waiting mechanism other than time.Sleep, you may have probably wondered why does it exit without waiting on the child process to finish?
+
+This is all due to how Concurrency is done in Go, namely in Go Concurrency is done in conformance with something called FORK JOIN model.
+
+Every time your Go program encounters the go keyword it automatically creates a FORK from the parent process, thus causing the Go Scheduler to go ahead and schedule that task. For every FORK point, there must be a JOIN point, meaning every time a parent process created a child process, it either must wait on it to finish or have some kind of cancellation/cleanup process for all its child processes, in order to avoid any kind of leaks.
+
+TLDR; FORK points are automatically created when using the go keyword, JOIN points can be created using a sync.WaitGroup or a channel.
+
+Note: Not to be confused, the term process here does not refer to an OS process, which is way more expensive.
+
